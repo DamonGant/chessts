@@ -1,0 +1,17 @@
+{
+  "compilerOptions": {
+    "target": "es6",
+    "module": "commonjs",
+    "moduleResolution": "node",
+    "outDir": "build",
+    "sourceMap": true
+  },
+  "exclude": [
+    "build",
+    "gulpfile.js",
+    "node_modules",
+    "src/server",
+    "typings/index",
+    "typings/index.d.ts"
+  ]
+}
