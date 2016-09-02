@@ -1,32 +1,86 @@
-import {ChessPiece} from './piece.ts';
-import {XFieldCoordinate, YFieldCoordinate} from './common.ts';
+import * as pieces from './piece';
+import {
+  ChessPieceColor,
+  XFieldCoordinate,
+  YFieldCoordinate,
+  SerializePosition,
+  DeserializePosition,
+  ChessPiecePosition
+} from './common';
 
 export class ChessBoard {
-  // these are used to map fields to names and reverse
-  private xMap = "abcdefgh";
-  private yMap = "87654371";
-
-  field: ChessPiece[] = [];
+  field: pieces.ChessPiece[] = [];
 
   constructor() {
     // populate the field array
-    for(var i = 0; i < this.xMap.length; i++) {
-      for (var v = 0; v < this.yMap.length; v++) {
-        let x = this.xMap.charAt(i);
-        let y = this.yMap.charAt(v);
+    this.defaultSetup();
+  }
+
+  defaultSetup() {
+    this.field = [];
+    this.pushPieces(
+      new pieces.KingPiece(this, ChessPieceColor.White, {x: 4, y:7}),
+      new pieces.QueenPiece(this, ChessPieceColor.White, {x: 3, y:7}),
+      new pieces.BishopPiece(this, ChessPieceColor.White, {x: 2, y:7}),
+      new pieces.BishopPiece(this, ChessPieceColor.White, {x: 5, y:7}),
+      new pieces.RookPiece(this, ChessPieceColor.White, {x: 0, y:7}),
+      new pieces.RookPiece(this, ChessPieceColor.White, {x: 7, y:7}),
+      new pieces.PeasentPiece(this, ChessPieceColor.White, {x: 0, y: 6}),
+      new pieces.PeasentPiece(this, ChessPieceColor.White, {x: 1, y: 6}),
+      new pieces.PeasentPiece(this, ChessPieceColor.White, {x: 2, y: 6}),
+      new pieces.PeasentPiece(this, ChessPieceColor.White, {x: 3, y: 6}),
+      new pieces.PeasentPiece(this, ChessPieceColor.White, {x: 4, y: 6}),
+      new pieces.PeasentPiece(this, ChessPieceColor.White, {x: 5, y: 6}),
+      new pieces.PeasentPiece(this, ChessPieceColor.White, {x: 6, y: 6}),
+      new pieces.PeasentPiece(this, ChessPieceColor.White, {x: 7, y: 6}),
+
+      new pieces.KingPiece(this, ChessPieceColor.Black, {x: 4, y:0}),
+      new pieces.QueenPiece(this, ChessPieceColor.Black, {x: 3, y:0}),
+      new pieces.BishopPiece(this, ChessPieceColor.Black, {x: 2, y:0}),
+      new pieces.BishopPiece(this, ChessPieceColor.Black, {x: 5, y:0}),
+      new pieces.RookPiece(this, ChessPieceColor.Black, {x: 0, y:0}),
+      new pieces.RookPiece(this, ChessPieceColor.Black, {x: 7, y:0}),
+      new pieces.PeasentPiece(this, ChessPieceColor.Black, {x: 0, y: 1}),
+      new pieces.PeasentPiece(this, ChessPieceColor.Black, {x: 1, y: 1}),
+      new pieces.PeasentPiece(this, ChessPieceColor.Black, {x: 2, y: 1}),
+      new pieces.PeasentPiece(this, ChessPieceColor.Black, {x: 3, y: 1}),
+      new pieces.PeasentPiece(this, ChessPieceColor.Black, {x: 4, y: 1}),
+      new pieces.PeasentPiece(this, ChessPieceColor.Black, {x: 5, y: 1}),
+      new pieces.PeasentPiece(this, ChessPieceColor.Black, {x: 6, y: 1}),
+      new pieces.PeasentPiece(this, ChessPieceColor.Black, {x: 7, y: 1}),
+    );
+  }
+
+  pushPieces(...pieces: pieces.ChessPiece[]) {
+    pieces.forEach((piece: pieces.ChessPiece) => this.field.push(piece))
+  }
+
+  getPieceAtPosition(position: ChessPiecePosition) {
+    return this.field.reduce<pieces.ChessPiece>((iterator: pieces.ChessPiece, piece: pieces.ChessPiece) => {
+      if (piece.position.y === position.y && piece.position.x === piece.position.x) {
+        return piece;
       }
-    }
+      return iterator;
+    }, null);
   }
 
   toJSON() {
-    return this.field.reduce<any>((iterator: any, field: ChessField) => {
-      let key = field.getKey();
-      console.dir(iterator);
-      iterator[key] = Object.assign({}, field.occupant);
+    return this.field.reduce<any[]>((iterator: any[], piece: pieces.ChessPiece) => {
+      iterator.push({
+        color: ChessPieceColor[piece.color],
+        position: SerializePosition(piece.position),
+        type: piece.getType(),
+        canMoveTo: piece.canMoveTo().map(p => SerializePosition(p))
+      });
       return iterator;
-    }, {});
+    }, []);
   }
+
+  
 };
 
 let board = new ChessBoard();
-console.dir(board.toJSON());
+
+console.log(JSON.stringify(
+  board.toJSON()
+));
