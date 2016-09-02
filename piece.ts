@@ -45,18 +45,23 @@ export class ChessPiece {
   }
 }
 
-export class PeasentPiece extends ChessPiece {
+export class PawnPiece extends ChessPiece {
   getType() : string {
-    return "ConsoleGamer";
+    return "Pawn";
   }
 
   getPossibleMoves() {
     let possiblePositions: common.ChessPiecePosition[] = [];
     
-    let frontPosition = {y: this.position.y - 1, x: this.position.x};
-    let frontLeftPosition = {y: this.position.y - 1, x: this.position.x - 1};
-    let frontRightPosition = {y: this.position.y - 1, x: this.position.x + 1};
-    
+    let frontPosition;
+    let frontLeftPosition;
+    let frontRightPosition;
+
+    if (this.color === common.ChessPieceColor.White) {
+      frontPosition = {y: this.position.y - 1, x: this.position.x};
+      frontLeftPosition = {y: this.position.y - 1, x: this.position.x - 1};
+      frontRightPosition = {y: this.position.y - 1, x: this.position.x + 1};
+    }
     if (this.color === common.ChessPieceColor.Black) {
       frontPosition = {y: this.position.y + 1, x: this.position.x};
       frontLeftPosition = {y: this.position.y + 1, x: this.position.x - 1};
@@ -78,8 +83,29 @@ export class PeasentPiece extends ChessPiece {
         possiblePositions.push(frontRightPosition);
       }
     };
-    console.dir(possiblePositions);
     return possiblePositions;
+  }
+}
+
+export class KnightPiece extends ChessPiece {
+  getType(): string {
+    return "Knight";
+  }
+
+  getPossibleMoves() {
+    let possiblePositions = [
+      {x: this.position.x + 2, y: this.position.y - 1},
+      {x: this.position.x + 2, y: this.position.y + 1},
+      {x: this.position.x - 2, y: this.position.y - 1},
+      {x: this.position.x - 2, y: this.position.y + 1},
+      {x: this.position.x + 1, y: this.position.y + 2},
+      {x: this.position.x + 1, y: this.position.y - 2},
+      {x: this.position.x - 1, y: this.position.y + 2},
+      {x: this.position.x - 1, y: this.position.y - 2}
+    ]
+    return possiblePositions
+      .filter((position) => common.isPositionInBounds(position))
+      .filter((position) => !(common.isOccupied(this.board, position) && this.board.getPieceAtPosition(position).color === this.color))
   }
 }
 

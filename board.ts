@@ -25,14 +25,16 @@ export class ChessBoard {
       new pieces.BishopPiece(this, ChessPieceColor.White, {x: 5, y:7}),
       new pieces.RookPiece(this, ChessPieceColor.White, {x: 0, y:7}),
       new pieces.RookPiece(this, ChessPieceColor.White, {x: 7, y:7}),
-      new pieces.PeasentPiece(this, ChessPieceColor.White, {x: 0, y: 6}),
-      new pieces.PeasentPiece(this, ChessPieceColor.White, {x: 1, y: 6}),
-      new pieces.PeasentPiece(this, ChessPieceColor.White, {x: 2, y: 6}),
-      new pieces.PeasentPiece(this, ChessPieceColor.White, {x: 3, y: 6}),
-      new pieces.PeasentPiece(this, ChessPieceColor.White, {x: 4, y: 6}),
-      new pieces.PeasentPiece(this, ChessPieceColor.White, {x: 5, y: 6}),
-      new pieces.PeasentPiece(this, ChessPieceColor.White, {x: 6, y: 6}),
-      new pieces.PeasentPiece(this, ChessPieceColor.White, {x: 7, y: 6}),
+      new pieces.KnightPiece(this, ChessPieceColor.White, {x: 1, y:7}),
+      new pieces.KnightPiece(this, ChessPieceColor.White, {x: 6, y:7}),
+      new pieces.PawnPiece(this, ChessPieceColor.White, {x: 0, y: 6}),
+      new pieces.PawnPiece(this, ChessPieceColor.White, {x: 1, y: 6}),
+      new pieces.PawnPiece(this, ChessPieceColor.White, {x: 2, y: 6}),
+      new pieces.PawnPiece(this, ChessPieceColor.White, {x: 3, y: 6}),
+      new pieces.PawnPiece(this, ChessPieceColor.White, {x: 4, y: 6}),
+      new pieces.PawnPiece(this, ChessPieceColor.White, {x: 5, y: 6}),
+      new pieces.PawnPiece(this, ChessPieceColor.White, {x: 6, y: 6}),
+      new pieces.PawnPiece(this, ChessPieceColor.White, {x: 7, y: 6}),
 
       new pieces.KingPiece(this, ChessPieceColor.Black, {x: 4, y:0}),
       new pieces.QueenPiece(this, ChessPieceColor.Black, {x: 3, y:0}),
@@ -40,14 +42,16 @@ export class ChessBoard {
       new pieces.BishopPiece(this, ChessPieceColor.Black, {x: 5, y:0}),
       new pieces.RookPiece(this, ChessPieceColor.Black, {x: 0, y:0}),
       new pieces.RookPiece(this, ChessPieceColor.Black, {x: 7, y:0}),
-      new pieces.PeasentPiece(this, ChessPieceColor.Black, {x: 0, y: 1}),
-      new pieces.PeasentPiece(this, ChessPieceColor.Black, {x: 1, y: 1}),
-      new pieces.PeasentPiece(this, ChessPieceColor.Black, {x: 2, y: 1}),
-      new pieces.PeasentPiece(this, ChessPieceColor.Black, {x: 3, y: 1}),
-      new pieces.PeasentPiece(this, ChessPieceColor.Black, {x: 4, y: 1}),
-      new pieces.PeasentPiece(this, ChessPieceColor.Black, {x: 5, y: 1}),
-      new pieces.PeasentPiece(this, ChessPieceColor.Black, {x: 6, y: 1}),
-      new pieces.PeasentPiece(this, ChessPieceColor.Black, {x: 7, y: 1}),
+      new pieces.KnightPiece(this, ChessPieceColor.Black, {x: 1, y:0}),
+      new pieces.KnightPiece(this, ChessPieceColor.Black, {x: 6, y:0}),
+      new pieces.PawnPiece(this, ChessPieceColor.Black, {x: 0, y: 1}),
+      new pieces.PawnPiece(this, ChessPieceColor.Black, {x: 1, y: 1}),
+      new pieces.PawnPiece(this, ChessPieceColor.Black, {x: 2, y: 1}),
+      new pieces.PawnPiece(this, ChessPieceColor.Black, {x: 3, y: 1}),
+      new pieces.PawnPiece(this, ChessPieceColor.Black, {x: 4, y: 1}),
+      new pieces.PawnPiece(this, ChessPieceColor.Black, {x: 5, y: 1}),
+      new pieces.PawnPiece(this, ChessPieceColor.Black, {x: 6, y: 1}),
+      new pieces.PawnPiece(this, ChessPieceColor.Black, {x: 7, y: 1}),
     );
   }
 
@@ -68,9 +72,9 @@ export class ChessBoard {
     return this.field.reduce<any[]>((iterator: any[], piece: pieces.ChessPiece) => {
       iterator.push({
         color: ChessPieceColor[piece.color],
-        position: SerializePosition(piece.position),
+        position: piece.position,
         type: piece.getType(),
-        canMoveTo: piece.canMoveTo().map(p => SerializePosition(p))
+        canMoveTo: piece.canMoveTo()
       });
       return iterator;
     }, []);
