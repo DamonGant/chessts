@@ -30,18 +30,23 @@ export class ChessPiece {
   getMaxSteps() : number {
     return 8;
   }
+}
  ``` 
 
 ## 2. Kapselung
 
 Als Datenkapselung bezeichnet man in der Programmierung das Verbergen von Implementierungsdetails. Auf die interne Datenstruktur kann nicht direkt zugegriffen werden, sondern nur über definierte Schnittstellen. Objekte können den internen Zustand anderer Objekte nicht in unerwarteter Weise lesen oder ändern. Ein Objekt hat eine Schnittstelle, die darüber bestimmt, auf welche Weise mit dem Objekt interagiert werden kann. Dies verhindert das Umgehen von Invarianten des Programms.
 
+```javascript
+    pieces.forEach((piece: pieces.ChessPiece) => this.field.push(piece))
+```  
 
 ## 3. Kohäsion
 
 Kohäsion beschreibt, wie gut eine Programmeinheit eine logische Aufgabe oder Einheit abbildet. In einem System mit starker Kohösion ist jede Programmeineheit/Methode, verantwortlich für genau eine wohldefinierte Aufgabe oder einheit.
 DRY - Dont Repeat Yourself
 
+zB. `getSteppers()`
 
 ## 4. Botschaften
 
@@ -54,14 +59,49 @@ Eine Botschaft (Message) ist ein Auftrag oder eine Anfrage eines Objektes an ein
 
 Vererbung heißt vereinfacht, dass eine abgeleitete Klasse die Methoden und Attribute der Basisklasse ebenfalls besitzt, also "erbt". Somit kann die abgeleitete Klasse auch darauf zugreifen. Neue Arten von Objekten können auf der Basis bereits vorhandener Objektdefinitionen festgelegt werden. Es können neue Bestandteile hinzugenommen werden oder vorhandene Überlagert werden.
 
+```javascript
+export class KingPiece extends ChessPiece {
+  getType() : string {
+    return "King";
+  }
 
+  getMaxSteps() {
+    return 1;
+  }
+
+  getSteppers() {
+    return common.queenSteppers;
+  }
+
+  getPossibleMoves() : common.ChessPiecePosition[] {
+    let possiblePositions : common.ChessPiecePosition[] = []
+    this.getSteppers().forEach((stepper) => {
+      possiblePositions = possiblePositions.concat(this.stepperIterator(stepper));
+    });
+    return possiblePositions;
+  }
+}
+```
 ## 6. Polymorphie
 
 Unter bestimmten Voraussetzungen können Algorithmen, die auf den Schnittstellen eines bestimmten Objekttyps operieren, auch mit davon abgeleiteten Objekten zusammenarbeiten.
 Geschieht dies so, dass durch Vererbung überschriebene Methoden an stelle der Methoden des vererbenden Objektes ausgeführt werden, dann spricht man von Polymorphie. Polymorphie stellt damit eine Möglichkeit dar, einer durch ähnliche Objekte ausgeführte Aktion einen Namen zu geben, wobei jedes Objekt die Aktion in einer für das Objekt geeigneten Weise implementiert.
 Diese Technik, das so genannte Overriding, implementiert aber keine universelle Polymorphie, sonder nur die sogenannte Ad-hoc-Polymorphie.
 
+```javascript
 
+  toJSON() {
+    return this.field.reduce<any[]>((iterator: any[], piece: pieces.ChessPiece) => {
+      iterator.push({
+        color: ChessPieceColor[piece.color],
+        position: piece.position,
+        type: piece.getType(),
+        canMoveTo: piece.canMoveTo()
+      });
+      return iterator;
+    }, []);
+  }
+```
 ## 7. Überladen
 
 Man kann eine Familie von Funktionen mit gleichen Namen, aber unterschiedlichen Signaturen definieren. Anhand der Aktualparameter eines Aufrufs wird vom Compiler die passende Funktion ausgewählt. Eine spezielle Version heißt Instanz der überladenen Funktion.
@@ -71,7 +111,11 @@ Man kann eine Familie von Funktionen mit gleichen Namen, aber unterschiedlichen 
 - Außerdem sind Funktionen mit Pointer- und Array Parametern identisch: void func(double \*p und void func (double p[32]);
 - Für Verwirrung kann man sorgen, wenn man eine Funktion mit einem int- und einem Pointer-Typen überlädt.
 
-
+```javascript
+pushPieces(...pieces: pieces.ChessPiece[]) {
+    pieces.forEach((piece: pieces.ChessPiece) => this.field.push(piece))
+  }
+```
 ## 8. Überschreiben
 
 Der Begriff Überschreiben (override) beschreibt das ableiten einer Klasse, welche eine eigene Implementierung einer von der Basisklasse geerbten Methode zu definieren.
